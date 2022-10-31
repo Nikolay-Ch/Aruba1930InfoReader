@@ -2,8 +2,6 @@
 using Aruba1930Cli.DTO;
 using Aruba1930Cli.XMLGenerated;
 using System;
-using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -11,7 +9,6 @@ using System.Reflection;
 using System.Security.Authentication;
 using System.Security.Cryptography;
 using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
 
@@ -58,6 +55,7 @@ namespace Aruba1930Cli
         public Aruba1930WebParser(string baseAddress)
         {
             CookieContainer = new();
+
             var handler = new HttpClientHandler
             {
                 CookieContainer = CookieContainer,
@@ -102,7 +100,7 @@ namespace Aruba1930Cli
                 var rsa = RSA.Create();
                 rsa.ImportRSAPublicKey(certBytes, out _);
 
-                // reverse engenereeng from Aruba JS-code: BASE_ADDRESS/csbf9485b5/hpe/config/login.htm
+                // reverse engineering from Aruba JS-code: BASE_ADDRESS/csbf9485b5/hpe/config/login.htm
                 // var res = rsa.encrypt("user=" + username + "&password=" + password + "&ssd=true" + "&token=" + loginToken +"&" );
                 var encData = rsa.Encrypt(Encoding.ASCII.GetBytes($"user={userName}&password={userPass}&ssd=true&token={encSettings.LoginToken}&"), RSAEncryptionPadding.Pkcs1);
 
