@@ -1,12 +1,14 @@
-﻿namespace Aruba1930Cli.XMLGenerated
+﻿#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
+#pragma warning disable IDE1006 // Naming Styles
+namespace Aruba1930Cli.XMLGenerated
 {
     // NOTE: Generated code may require at least .NET Framework 4.5 or .NET Core/Standard 2.0.
     /// <remarks/>
     [System.SerializableAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-    [System.Xml.Serialization.XmlRootAttribute(Namespace = "", IsNullable = false, ElementName = "ResponseData")]
-    public partial class ResponseDataAllStatuses
+    [System.Xml.Serialization.XmlRootAttribute(Namespace = "", IsNullable = false)]
+    public partial class ResponseData
     {
 
         private ResponseDataDeviceConfiguration deviceConfigurationField;
@@ -56,6 +58,8 @@
         private ResponseDataDeviceConfigurationPoEPSEInterfaceList poEPSEInterfaceListField;
 
         private ResponseDataDeviceConfigurationPoEPSEUnitList poEPSEUnitListField;
+
+        private ResponseDataDeviceConfigurationRMONStatistics rMONStatisticsField;
 
         /// <remarks/>
         public decimal version
@@ -119,6 +123,19 @@
             set
             {
                 this.poEPSEUnitListField = value;
+            }
+        }
+
+        /// <remarks/>
+        public ResponseDataDeviceConfigurationRMONStatistics RMONStatistics
+        {
+            get
+            {
+                return this.rMONStatisticsField;
+            }
+            set
+            {
+                this.rMONStatisticsField = value;
             }
         }
     }
@@ -1424,4 +1441,355 @@
             }
         }
     }
+
+    /// <remarks/>
+    [System.SerializableAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
+    public partial class ResponseDataDeviceConfigurationRMONStatistics
+    {
+
+        private ResponseDataDeviceConfigurationRMONStatisticsInterfaceStatisticsEntry[] interfaceStatisticsListField;
+
+        private string typeField;
+
+        /// <remarks/>
+        [System.Xml.Serialization.XmlArrayItemAttribute("InterfaceStatisticsEntry", IsNullable = false)]
+        public ResponseDataDeviceConfigurationRMONStatisticsInterfaceStatisticsEntry[] InterfaceStatisticsList
+        {
+            get
+            {
+                return this.interfaceStatisticsListField;
+            }
+            set
+            {
+                this.interfaceStatisticsListField = value;
+            }
+        }
+
+        /// <remarks/>
+        [System.Xml.Serialization.XmlAttributeAttribute()]
+        public string type
+        {
+            get
+            {
+                return this.typeField;
+            }
+            set
+            {
+                this.typeField = value;
+            }
+        }
+    }
+
+    /// <remarks/>
+    [System.SerializableAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
+    public partial class ResponseDataDeviceConfigurationRMONStatisticsInterfaceStatisticsEntry
+    {
+
+        private string interfaceNameField;
+
+        private byte interfaceTypeField;
+
+        private uint interfaceIDField;
+
+        private uint dropEventCountField;
+
+        private uint receivePacketByteCountField;
+
+        private uint receivePacketCountField;
+
+        private uint receiveBroadcastPacketCountField;
+
+        private uint receiveMulticastPacketCountField;
+
+        private uint cRCAlignErrorCountField;
+
+        private uint undersizePacketCountField;
+
+        private uint oversizePacketCountField;
+
+        private uint fragmentCountField;
+
+        private uint jabberCountField;
+
+        private uint collisionCountField;
+
+        private uint frameOf64BytesCountField;
+
+        private uint frameOf65To127BytesCountField;
+
+        private uint frameOf128To255BytesCountField;
+
+        private uint frameOf256To511BytesCountField;
+
+        private uint frameOf512To1023BytesCountField;
+
+        private uint frameOf1024To1518BytesCountField;
+
+        /// <remarks/>
+        public string interfaceName
+        {
+            get
+            {
+                return this.interfaceNameField;
+            }
+            set
+            {
+                this.interfaceNameField = value;
+            }
+        }
+
+        /// <remarks/>
+        public byte interfaceType
+        {
+            get
+            {
+                return this.interfaceTypeField;
+            }
+            set
+            {
+                this.interfaceTypeField = value;
+            }
+        }
+
+        /// <remarks/>
+        public uint interfaceID
+        {
+            get
+            {
+                return this.interfaceIDField;
+            }
+            set
+            {
+                this.interfaceIDField = value;
+            }
+        }
+
+        /// <remarks/>
+        public uint dropEventCount
+        {
+            get
+            {
+                return this.dropEventCountField;
+            }
+            set
+            {
+                this.dropEventCountField = value;
+            }
+        }
+
+        /// <remarks/>
+        public uint receivePacketByteCount
+        {
+            get
+            {
+                return this.receivePacketByteCountField;
+            }
+            set
+            {
+                this.receivePacketByteCountField = value;
+            }
+        }
+
+        /// <remarks/>
+        public uint receivePacketCount
+        {
+            get
+            {
+                return this.receivePacketCountField;
+            }
+            set
+            {
+                this.receivePacketCountField = value;
+            }
+        }
+
+        /// <remarks/>
+        public uint receiveBroadcastPacketCount
+        {
+            get
+            {
+                return this.receiveBroadcastPacketCountField;
+            }
+            set
+            {
+                this.receiveBroadcastPacketCountField = value;
+            }
+        }
+
+        /// <remarks/>
+        public uint receiveMulticastPacketCount
+        {
+            get
+            {
+                return this.receiveMulticastPacketCountField;
+            }
+            set
+            {
+                this.receiveMulticastPacketCountField = value;
+            }
+        }
+
+        /// <remarks/>
+        public uint CRCAlignErrorCount
+        {
+            get
+            {
+                return this.cRCAlignErrorCountField;
+            }
+            set
+            {
+                this.cRCAlignErrorCountField = value;
+            }
+        }
+
+        /// <remarks/>
+        public uint undersizePacketCount
+        {
+            get
+            {
+                return this.undersizePacketCountField;
+            }
+            set
+            {
+                this.undersizePacketCountField = value;
+            }
+        }
+
+        /// <remarks/>
+        public uint oversizePacketCount
+        {
+            get
+            {
+                return this.oversizePacketCountField;
+            }
+            set
+            {
+                this.oversizePacketCountField = value;
+            }
+        }
+
+        /// <remarks/>
+        public uint fragmentCount
+        {
+            get
+            {
+                return this.fragmentCountField;
+            }
+            set
+            {
+                this.fragmentCountField = value;
+            }
+        }
+
+        /// <remarks/>
+        public uint jabberCount
+        {
+            get
+            {
+                return this.jabberCountField;
+            }
+            set
+            {
+                this.jabberCountField = value;
+            }
+        }
+
+        /// <remarks/>
+        public uint collisionCount
+        {
+            get
+            {
+                return this.collisionCountField;
+            }
+            set
+            {
+                this.collisionCountField = value;
+            }
+        }
+
+        /// <remarks/>
+        public uint frameOf64BytesCount
+        {
+            get
+            {
+                return this.frameOf64BytesCountField;
+            }
+            set
+            {
+                this.frameOf64BytesCountField = value;
+            }
+        }
+
+        /// <remarks/>
+        public uint frameOf65To127BytesCount
+        {
+            get
+            {
+                return this.frameOf65To127BytesCountField;
+            }
+            set
+            {
+                this.frameOf65To127BytesCountField = value;
+            }
+        }
+
+        /// <remarks/>
+        public uint frameOf128To255BytesCount
+        {
+            get
+            {
+                return this.frameOf128To255BytesCountField;
+            }
+            set
+            {
+                this.frameOf128To255BytesCountField = value;
+            }
+        }
+
+        /// <remarks/>
+        public uint frameOf256To511BytesCount
+        {
+            get
+            {
+                return this.frameOf256To511BytesCountField;
+            }
+            set
+            {
+                this.frameOf256To511BytesCountField = value;
+            }
+        }
+
+        /// <remarks/>
+        public uint frameOf512To1023BytesCount
+        {
+            get
+            {
+                return this.frameOf512To1023BytesCountField;
+            }
+            set
+            {
+                this.frameOf512To1023BytesCountField = value;
+            }
+        }
+
+        /// <remarks/>
+        public uint frameOf1024To1518BytesCount
+        {
+            get
+            {
+                return this.frameOf1024To1518BytesCountField;
+            }
+            set
+            {
+                this.frameOf1024To1518BytesCountField = value;
+            }
+        }
+    }
 }
+
+#pragma warning restore IDE1006 // Naming Styles
+#pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.

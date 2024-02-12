@@ -2,7 +2,7 @@
 
 namespace Aruba1930Cli.DTO
 {
-    public class UnitStatus
+    public readonly record struct UnitStatus
     {
         public int TemperatureSensorValue { get; init; }
 

@@ -22,7 +22,7 @@
         Class3 = 4
     }
 
-    public struct PortEventCounters
+    public readonly record struct PortEventCounters
     {
         public uint Overloads { get; init; }
         public uint Denials { get; init; }
@@ -31,14 +31,14 @@
         public uint Shorts { get; init; }
     }
 
-    public class UnitPortPoE
+    public readonly record struct UnitPortPoE
     {
-        public string PortName { get; init; }
+        public required string PortName { get; init; }
         public int InterfaceIndex { get; init; }
-        public bool AdminEnable { get; set; }
+        public bool AdminEnable { get; init; }
         public PortPoEStatus PoEStatus { get; init; }
         public PortPowerPriority PowerPriority { get; init; }
-        public PortPowerClass PowerClass { get; set; }
+        public PortPowerClass PowerClass { get; init; }
         public PortEventCounters EventCounters { get; init; }
         public decimal OutputVoltage { get; init; }
         public decimal OutputCurrrent { get; init; }

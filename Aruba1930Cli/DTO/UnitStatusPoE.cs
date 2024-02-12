@@ -1,8 +1,6 @@
-﻿using System;
-
-namespace Aruba1930Cli.DTO
+﻿namespace Aruba1930Cli.DTO
 {
-    public class UnitStatusPoE
+    public readonly record struct UnitStatusPoE
     {
         public int PoEStatus { get; init; }
 

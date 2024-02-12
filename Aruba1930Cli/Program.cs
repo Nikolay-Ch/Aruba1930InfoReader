@@ -6,11 +6,11 @@ namespace Aruba1930Cli
     {
         static void Main()
         {
-            var aruba = new Aruba1930WebParser(Environment.GetEnvironmentVariable("BaseUri"));
+            var aruba = new Aruba1930WebParser(Environment.GetEnvironmentVariable("BaseUri")!);
 
             aruba.Login(
-                Environment.GetEnvironmentVariable("UserName"),
-                Environment.GetEnvironmentVariable("UserPass"))
+                Environment.GetEnvironmentVariable("UserName")!,
+                Environment.GetEnvironmentVariable("UserPass")!)
                 .Wait();
 
             var res2 = aruba.GetAllStatuses().Result;

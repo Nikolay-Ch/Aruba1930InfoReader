@@ -5,7 +5,7 @@ using System;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
-using System.Reflection;
+using System.Runtime.Serialization;
 using System.Security.Authentication;
 using System.Security.Cryptography;
 using System.Text;
@@ -14,39 +14,6 @@ using System.Xml.Serialization;
 
 namespace Aruba1930Cli
 {
-    public static class UriExtensions
-    {
-        public static Uri UncanonicQueryString(this Uri uri)
-        {
-            var uriType = uri.GetType();
-
-            var flagsEnumType = uriType.GetNestedType("Flags", BindingFlags.NonPublic | BindingFlags.Instance);
-
-            var fieldEnum = uriType.GetField("_flags", BindingFlags.NonPublic | BindingFlags.Instance);
-
-            var val = fieldEnum.GetValue(uri);
-
-            var valCorr = Enum.Parse(flagsEnumType,
-                string.Join(", ",
-                Enum.Format(flagsEnumType, val, "g")
-                    .Split(',', ' ')
-                    .Where(e => !string.IsNullOrEmpty(e) && e != "E_QueryNotCanonical")));
-
-            fieldEnum.SetValue(uri, valCorr);
-
-            var s = uri.PathAndQuery;
-
-            var fieldInfo = uriType.GetField("_info", BindingFlags.NonPublic | BindingFlags.Instance);
-            var valInfo = fieldInfo.GetValue(uri);
-            
-            var fieldPathAndQuery = valInfo.GetType().GetField("PathAndQuery", BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance);
-            var valPathAndQuery = ((string)fieldPathAndQuery.GetValue(valInfo)).Replace("%7B", "{").Replace("%7D", "}");
-            fieldPathAndQuery.SetValue(valInfo, valPathAndQuery);
-
-            return uri;
-        }
-    }
-
     public class Aruba1930WebParser
     {
         private HttpClient ApiClient { get; }
@@ -71,11 +38,12 @@ namespace Aruba1930Cli
 
         async protected Task<EncryptionSettings> EncryptionSettingsGet()
         {
-            var uri = new Uri(ApiClient.BaseAddress, "device/wcd?{EncryptionSetting}");
-            var streamTask = await ApiClient.GetStreamAsync(uri.UncanonicQueryString());
+            var uri = new Uri(ApiClient.BaseAddress!, "device/wcd?{EncryptionSetting}");
+            var streamTask = await ApiClient.GetStreamAsync(uri);//.UncanonicQueryString());
 
             var ser = new XmlSerializer(typeof(ResponseDataEncriptionSettings));
-            var rd = (ResponseDataEncriptionSettings)ser.Deserialize(streamTask);
+            var rd = (ResponseDataEncriptionSettings?)ser?.Deserialize(streamTask) ??
+                throw new SerializationException("Deserialization error... Object is empty"); ;
 
             return new EncryptionSettings
             {
@@ -104,7 +72,7 @@ namespace Aruba1930Cli
                 // var res = rsa.encrypt("user=" + username + "&password=" + password + "&ssd=true" + "&token=" + loginToken +"&" );
                 var encData = rsa.Encrypt(Encoding.ASCII.GetBytes($"user={userName}&password={userPass}&ssd=true&token={encSettings.LoginToken}&"), RSAEncryptionPadding.Pkcs1);
 
-                var uri = new Uri(ApiClient.BaseAddress, $"/csbf9485b5/hpe/config/system.xml?action=login&cred={Convert.ToHexString(encData).ToLower()}");
+                var uri = new Uri(ApiClient.BaseAddress!, $"/csbf9485b5/hpe/config/system.xml?action=login&cred={Convert.ToHexString(encData).ToLower()}");
 
                 var response = await ApiClient.GetAsync(uri);
                 if (!response.IsSuccessStatusCode)
@@ -113,7 +81,8 @@ namespace Aruba1930Cli
                 var streamTask = await response.Content.ReadAsStreamAsync();
 
                 var ser = new XmlSerializer(typeof(ResponseDataLogin));
-                var rd = (ResponseDataLogin)ser.Deserialize(streamTask);
+                var rd = (ResponseDataLogin?)ser?.Deserialize(streamTask) ??
+                    throw new SerializationException("Deserialization error... Object is empty"); ;
 
                 if (rd.ActionStatus.statusCode == "0")
                     return;
@@ -126,14 +95,15 @@ namespace Aruba1930Cli
             throw new NotImplementedException();
         }
 
-        async public Task<(UnitStatus, UnitStatusPoE, UnitPort[], UnitPortPoE[])> GetAllStatuses()
+        async public Task<(UnitStatus, UnitStatusPoE, UnitPort[], UnitPortPoE[], UnitPortStatistics[])> GetAllStatuses()
         {
-            var uri = new Uri(ApiClient.BaseAddress, "device/wcd?{Ports}{DiagnosticsUnitList}{PoEPSEInterfaceList}{PoEPSEUnitList}");
+            var uri = new Uri(ApiClient.BaseAddress!, "device/wcd?{Ports}{DiagnosticsUnitList}{PoEPSEInterfaceList}{PoEPSEUnitList}{RMONStatistics}");
 
-            var streamTask = await ApiClient.GetStreamAsync(uri.UncanonicQueryString());
+            var streamTask = await ApiClient.GetStreamAsync(uri);//.UncanonicQueryString());
 
-            var ser = new XmlSerializer(typeof(ResponseDataAllStatuses));
-            var rd = (ResponseDataAllStatuses)ser.Deserialize(streamTask);
+            var ser = new XmlSerializer(typeof(ResponseData));
+            var rd = (ResponseData?)ser?.Deserialize(streamTask) ??
+                throw new SerializationException("Deserialization error... Object is empty"); ;
 
             var us = new UnitStatus
             {
@@ -186,7 +156,30 @@ namespace Aruba1930Cli
                 OutputPower = e.outputPower / 1000m, // watts
             }).ToArray();
 
-            return (us, usp, up, upp);
+            var ups = rd.DeviceConfiguration.RMONStatistics.InterfaceStatisticsList.Select(e => new UnitPortStatistics
+            {
+                PortName = e.interfaceName,
+                InterfaceIndex = e.interfaceID,
+                DropEventCount = e.dropEventCount,
+                ReceivePacketByteCount = e.receivePacketByteCount,
+                ReceivePacketCount = e.receivePacketCount,
+                ReceiveBroadcastPacketCount = e.receiveBroadcastPacketCount,
+                ReceiveMulticastPacketCount = e.receiveMulticastPacketCount,
+                CRCAlignErrorCount = e.CRCAlignErrorCount,
+                UndersizePacketCount = e.undersizePacketCount,
+                OversizePacketCount = e.oversizePacketCount,
+                FragmentCount = e.fragmentCount,
+                JabberCount = e.jabberCount,
+                CollisionCount = e.collisionCount,
+                FrameOf64BytesCount = e.frameOf64BytesCount,
+                FrameOf65To127BytesCount = e.frameOf65To127BytesCount,
+                FrameOf128To255BytesCount = e.frameOf128To255BytesCount,
+                FrameOf256To511BytesCount = e.frameOf256To511BytesCount,
+                FrameOf512To1023BytesCount = e.frameOf512To1023BytesCount,
+                FrameOf1024To1518BytesCount = e.frameOf1024To1518BytesCount
+            }).ToArray();
+
+            return (us, usp, up, upp, ups);
         }
     }
 }

@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Aruba1930Cli.DTO
+﻿namespace Aruba1930Cli.DTO
 {
     public enum PortTransportType
     {
@@ -25,11 +19,11 @@ namespace Aruba1930Cli.DTO
         LinkDown = 2
     }
 
-    public class UnitPort
+    public readonly record struct UnitPort
     {
         public bool PoESupported { get; init; }
         public int InterfaceIndex { get; init; }
-        public string PortName { get; init; }
+        public required string PortName { get; init; }
         public int? Column { get; init; }
         public PortTransportType TransportType { get; init; }
         public PortSpeed Speed { get; init; }
